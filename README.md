@@ -16,13 +16,28 @@ You need a Canvas LMS token to run this script.
 ```
 4. Clone this repo to your local computer.
 5. Change the `MY_DOMAIN` variable in the script to match your institution's Canvas URL (e.g., `https://umich.instructure.com` for University of Michigan).
-6. Run the script using Python, 3.6 or higher:
+
+## Usage
+
+Run the script using Python, 3.6 or higher. You'll need the `requests` library, which is available from PyPI or Anaconda Cloud:
+
+```
+# Install `requests` library from PyPI
+pip install -U requests
+
+# Or install `requests` library with conda
+conda activate <your_environment>
+conda install -c conda-forge requests
+```
+
+Then just run the script directly. No command-line arguments are needed.
+
 ```
 # On Linux/macOS/BSD
 cd <repo folder>
 python3 ./mark-canvas-announcements-as-read.py
 
-# On Windows
+# Or on Windows
 cd <repo folder>
 python ./mark-canvas-announcements-as-read.py
 ```

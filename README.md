@@ -12,7 +12,7 @@ You need a Canvas LMS token to run this script.
 2. Under **Account** > **Settings** > **Approved Integrations**, choose to generate a new access token. Take note of this token (a long string of letters, numbers, and symbols) because you can't see it again once you leave that screen.
 3. Create a file `~/.instructure/.instructure.json`, where `~` is your home folder. In this file, enter your token in the form:
 ```
-{"token": "<YOUR_TOKEN_HERE"}
+{"token": "YOUR_TOKEN_HERE"}
 ```
 4. Clone this repo to your local computer.
 5. Change the `MY_DOMAIN` variable in the script to match your institution's Canvas URL (e.g., `https://umich.instructure.com` for University of Michigan).

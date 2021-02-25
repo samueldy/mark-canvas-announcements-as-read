@@ -51,7 +51,13 @@ def mark_announcement_unread(course_id, disc_id):
 
 
 for course in courses.json():
-    course_id = course["id"]
+    try:
+        course_id = course["id"]
+    except TypeError:
+        # Potentially malformed JSON response; skip this one.
+        print(f"Couldn't get info for course {course}. Skipping.")
+        continue
+
     nowtime = datetime.datetime.now().isoformat()
 
     # Retrieve all announcements that have been published in the course

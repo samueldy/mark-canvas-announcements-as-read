@@ -10,7 +10,7 @@ You need a Canvas LMS token to run this script.
 
 1. Log into the Canvas web app using your institution's domain (i.e., `https://umich.instructure.com`) and make a note of this `.instructure.com` URL.
 2. Under **Account** > **Settings** > **Approved Integrations**, choose to generate a new access token. Take note of this token (a long string of letters, numbers, and symbols) because you can't see it again once you leave that screen.
-3. Create a file `~/.instructure/.instructure.json`, where `~` is your home folder. In this file, enter your token in the form:
+3. Create a file `~/.instructure/.instructure.json`, where `~` is your home folder. (On Windows 7/8/10, this folder is generally located at `%USERPROFILE%`, `%HOMEPATH%`, or `C:\Users\<username>`. On  macOS and most \*NIX systems it is usually located at `$HOME` or `/home/<username>`.) In this file, enter your token in the form:
 ```
 {"token": "YOUR_TOKEN_HERE"}
 ```

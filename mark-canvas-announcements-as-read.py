@@ -58,7 +58,7 @@ for course in courses.json():
         print(f"Couldn't get info for course {course}. Skipping.")
         continue
 
-    nowtime = datetime.datetime.now().isoformat()
+    nowtime = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
     # Retrieve all announcements that have been published in the course
 

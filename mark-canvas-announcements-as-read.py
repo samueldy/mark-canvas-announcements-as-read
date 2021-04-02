@@ -14,10 +14,42 @@ with open(API_FILE, "r") as f:
     api_info = json.load(f)
 TOKEN = api_info["token"]
 auth = {"Authorization": "Bearer " + TOKEN}
-MY_DOMAIN = "https://MYINSTITUTION.instructure.com"
+MY_DOMAIN = "https://umich.instructure.com"
 start_date = datetime.datetime(1000, 1, 1).isoformat()
 
 # Necessary to list all announcements
+# Work through Canvas' pagination model if the relevant links exist
+def get_paginated_list(result: requests.models.Response) -> list:
+    """
+    Easily handle pagination with Canvas API requests
+    """
+
+    items_list = result.json()
+
+    while True:
+        try:
+            result.headers["Link"]
+
+            # Handle pagination links
+            pagination_links = result.headers["Link"].split(",")
+
+            pagination_urls = {}
+            for link in pagination_links:
+                url, label = link.split(";")
+                label = label.split("=")[-1].replace('"', "")
+                url = url.replace("<", "").replace(">", "")
+                pagination_urls.update({label: url})
+
+            # Now try to get the next page
+            print(f"""\tGetting next page of announcements...""")
+            result = requests.get(pagination_urls["next"], headers=auth)
+            items_list.extend(result.json())
+
+        except KeyError:
+            print("Reached end of paginated list")
+            break
+
+    return items_list
 
 # Get all courses
 
@@ -66,25 +98,29 @@ for course in courses.json():
         "context_codes[]": "course_" + str(course_id),
         "start_date": start_date,
         "end_date": nowtime,
-        "per_page": 10000,
+        "per_page": 50,
     }
 
     # Try to get announcements. If we get a non-200 response, we're probably
     # not authorized to view the course and thus can't alter the read state of
     # any announcements, so skip the course.
-    announcements = requests.get(
+    announcements_response = requests.get(
         MY_DOMAIN + "/api/v1/announcements", headers=auth, params=params
     )
 
-    if announcements.status_code != 200:
+    if announcements_response.status_code != 200:
         print(
-            f"Cannot access course {course_id} -- are you authorized to view this course? (No announcements changed.)"
+            f"Cannot access course {course_id} -- "
+            f"are you authorized to view this course? (No announcements changed.)"
         )
         continue
     else:
         print(f"""Marking announcements for course {course_id} ({course["name"]})""")
 
-    for announcement in announcements.json():
+    # Get all announcements from paginated list
+    announcements_list = get_paginated_list(announcements_response)
+
+    for announcement in announcements_list:
 
         # Delete the offending announcements
         if announcement["read_state"] == "unread":

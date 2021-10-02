@@ -46,10 +46,11 @@ def get_paginated_list(result: requests.models.Response) -> list:
             items_list.extend(result.json())
 
         except KeyError:
-            print("Reached end of paginated list")
+            print("\tReached end of paginated list")
             break
 
     return items_list
+
 
 # Get all courses
 
@@ -115,7 +116,12 @@ for course in courses.json():
         )
         continue
     else:
-        print(f"""Marking announcements for course {course_id} ({course["name"]})""")
+        try:
+            print(
+                f"""Marking announcements for course {course_id} ({course["name"]})"""
+            )
+        except KeyError:
+            print(f"""Marking announcements for course {course_id}""")
 
     # Get all announcements from paginated list
     announcements_list = get_paginated_list(announcements_response)
